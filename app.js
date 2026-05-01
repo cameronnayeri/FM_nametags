@@ -118,36 +118,38 @@ function measureW(text, size) {
 }
 
 // ─── Name splitting ───────────────────────────────────────────────────────────
+// Character-count thresholds derived from FM template examples:
+//   "Sofia LoBiondo"          = 14 chars → Default (single line, 48pt)
+//   "Shannon Roberson"         = 16 chars → Long Name (2-line, 48pt)
+//   "Jessica McLoughlin Clayton"= 26 chars → Extra Long (2-line, 27pt)
+const NAME_CHAR_LONG = 15;   // > 15 chars → 2-line name
+const NAME_CHAR_XL   = 25;   // > 25 chars → 27pt name
+
 // Returns { lines: string[], size: number }
 function getNameInfo(name) {
-  const n   = name.trim();
-  const mw  = getMaxW();
+  const n = name.trim();
   if (!n) return { lines: [''], size: NAME_SIZE };
 
-  if (measureW(n, NAME_SIZE) <= mw) return { lines: [n], size: NAME_SIZE };
+  if (n.length <= NAME_CHAR_LONG) return { lines: [n], size: NAME_SIZE };
 
-  const split48 = balancedNameSplit(n, NAME_SIZE, mw);
-  if (split48) return { lines: split48, size: NAME_SIZE };
+  const split = splitNameAtMidpoint(n);
+  if (n.length <= NAME_CHAR_XL) return { lines: split, size: NAME_SIZE };
 
-  const split27 = balancedNameSplit(n, NAME_SIZE_XL, mw);
-  return { lines: split27 || [n], size: NAME_SIZE_XL };
+  return { lines: split, size: NAME_SIZE_XL };
 }
 
-function balancedNameSplit(name, size, mw) {
+// Splits a name at the word boundary whose character lengths are most balanced.
+function splitNameAtMidpoint(name) {
   const words = name.trim().split(/\s+/);
-  if (words.length < 2) return null;
+  if (words.length < 2) return [name.trim()];
 
-  let bestBreak = null, bestDiff = Infinity;
+  let bestBreak = 1, bestDiff = Infinity;
   for (let i = 1; i < words.length; i++) {
-    const l1 = words.slice(0, i).join(' ');
-    const l2 = words.slice(i).join(' ');
-    if (measureW(l1, size) > mw) break;
-    if (measureW(l2, size) > mw) continue;
-    const diff = Math.abs(measureW(l1, size) - measureW(l2, size));
+    const l1 = words.slice(0, i).join(' ').length;
+    const l2 = words.slice(i).join(' ').length;
+    const diff = Math.abs(l1 - l2);
     if (diff < bestDiff) { bestDiff = diff; bestBreak = i; }
   }
-
-  if (bestBreak === null) return null;
   return [words.slice(0, bestBreak).join(' '), words.slice(bestBreak).join(' ')];
 }
 
