@@ -37,9 +37,9 @@ const WT_12  = { nameY: 70.25, nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 11
 // WT_21 / WT_22: 2-line name (48pt) + title
 const WT_21  = { nameY: 63.0,  nameSize: NAME_SIZE,    nameLineH: 47, titleY: 135.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
 const WT_22  = { nameY: 53.0,  nameSize: NAME_SIZE,    nameLineH: 44, titleY: 119.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H - 2 };
-// WT_LG1 / WT_LG2: 2-line name (36pt) + title
-const WT_LG1 = { nameY: 55.0,  nameSize: NAME_SIZE_LG, nameLineH: 43, titleY: 126.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
-const WT_LG2 = { nameY: 49.0,  nameSize: NAME_SIZE_LG, nameLineH: 40, titleY: 114.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
+// WT_LG1 / WT_LG2: 2-line name (36pt) + title — nameY/nameLineH/titleY from "Extra Long Name w Job Title" template
+const WT_LG1 = { nameY: 62.0,  nameSize: NAME_SIZE_LG, nameLineH: 39, titleY: 131.81, titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
+const WT_LG2 = { nameY: 52.0,  nameSize: NAME_SIZE_LG, nameLineH: 38, titleY: 118.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
 // WT_X1 / WT_X2: 2-line name (27pt) + title
 const WT_X1  = { nameY: 52.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 118.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
 const WT_X2  = { nameY: 40.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 105.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
