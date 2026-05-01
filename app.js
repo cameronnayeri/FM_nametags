@@ -12,7 +12,8 @@ const FILL_TEXT = '#001952';
 const FONT_FAM  = "'FMReview-Regular', 'FM Review', sans-serif";
 
 const NAME_SIZE     = 48;
-const NAME_SIZE_XL  = 27;    // reduced for very long names (extra long layout)
+const NAME_SIZE_LG  = 36;    // long name — 2-line split that fits at 36pt
+const NAME_SIZE_XL  = 27;    // extra long — 2-line split that only fits at 27pt
 const TITLE_SIZE    = 21.34;
 const TITLE_SIZE_XL = 19;    // reduced for extra-long name + 2-line title
 
@@ -24,20 +25,24 @@ const RIGHT_MARGIN = 41.09;
 
 // ─── Layouts ───────────────────────────────────────────────────────────────────
 // No-title layouts — positions derived from FM template files
-const NT_S  = { nameY: 101.69, nameSize: NAME_SIZE,    nameLineH: 0  };  // 1-line name
-const NT_L  = { nameY:  76.69, nameSize: NAME_SIZE,    nameLineH: 50 };  // 2-line 48px
-const NT_XL = { nameY:  73.0,  nameSize: NAME_SIZE_XL, nameLineH: 33 };  // 2-line 27px
+const NT_S  = { nameY: 101.69, nameSize: NAME_SIZE,    nameLineH: 0    };  // 1-line 48pt
+const NT_L  = { nameY:  76.69, nameSize: NAME_SIZE,    nameLineH: 50   };  // 2-line 48pt
+const NT_LG = { nameY:  74.43, nameSize: NAME_SIZE_LG, nameLineH: 45.5 };  // 2-line 36pt (template)
+const NT_XL = { nameY:  73.0,  nameSize: NAME_SIZE_XL, nameLineH: 33   };  // 2-line 27pt
 
 // With-title layouts — nameLines × titleLines
 // WT_11 / WT_12: positions from "Default Name w Job Title" and "Long Name w Job Title" templates
-const WT_11 = { nameY: 82.3,  nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 122.16, titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
-const WT_12 = { nameY: 70.25, nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 110.12, titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
-// WT_21 / WT_22: 2-line name (48px) + title — extrapolated to fit within 167.37 height
-const WT_21 = { nameY: 63.0,  nameSize: NAME_SIZE,    nameLineH: 47, titleY: 135.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
-const WT_22 = { nameY: 53.0,  nameSize: NAME_SIZE,    nameLineH: 44, titleY: 119.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H - 2 };
-// WT_X1 / WT_X2: 2-line name (27px) + title
-const WT_X1 = { nameY: 52.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 118.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
-const WT_X2 = { nameY: 40.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 105.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
+const WT_11  = { nameY: 82.3,  nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 122.16, titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
+const WT_12  = { nameY: 70.25, nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 110.12, titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
+// WT_21 / WT_22: 2-line name (48pt) + title
+const WT_21  = { nameY: 63.0,  nameSize: NAME_SIZE,    nameLineH: 47, titleY: 135.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
+const WT_22  = { nameY: 53.0,  nameSize: NAME_SIZE,    nameLineH: 44, titleY: 119.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H - 2 };
+// WT_LG1 / WT_LG2: 2-line name (36pt) + title
+const WT_LG1 = { nameY: 55.0,  nameSize: NAME_SIZE_LG, nameLineH: 43, titleY: 126.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
+const WT_LG2 = { nameY: 49.0,  nameSize: NAME_SIZE_LG, nameLineH: 40, titleY: 114.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
+// WT_X1 / WT_X2: 2-line name (27pt) + title
+const WT_X1  = { nameY: 52.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 118.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
+const WT_X2  = { nameY: 40.0,  nameSize: NAME_SIZE_XL, nameLineH: 33, titleY: 105.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
 
 // ─── PDF layout (all in points) ───────────────────────────────────────────────
 const PAGE_W   = 612;   // 8.5"
@@ -129,8 +134,11 @@ function getNameInfo(name) {
   const split48 = balancedNameSplit(n, NAME_SIZE, mw);
   if (split48) return { lines: split48, size: NAME_SIZE };
 
-  const split36 = balancedNameSplit(n, NAME_SIZE_XL, mw);
-  return { lines: split36 || [n], size: NAME_SIZE_XL };
+  const split36 = balancedNameSplit(n, NAME_SIZE_LG, mw);
+  if (split36) return { lines: split36, size: NAME_SIZE_LG };
+
+  const split27 = balancedNameSplit(n, NAME_SIZE_XL, mw);
+  return { lines: split27 || [n], size: NAME_SIZE_XL };
 }
 
 function balancedNameSplit(name, size, mw) {
@@ -207,33 +215,37 @@ function getTitleLines(title) {
 // ─── Layout selection ─────────────────────────────────────────────────────────
 function pickLayout(nameInfo, titleLines) {
   const nameLg   = nameInfo.lines.length > 1;
-  const nameXL   = nameInfo.size === NAME_SIZE_XL;
+  const nameSize = nameInfo.size;
   const hasTitle = titleLines.length > 0;
   const titleLg  = titleLines.length > 1;
 
   if (!hasTitle) {
-    if (nameXL) return NT_XL;
+    if (nameSize === NAME_SIZE_XL) return NT_XL;
+    if (nameSize === NAME_SIZE_LG) return NT_LG;
     if (nameLg) return NT_L;
     return NT_S;
   }
-  if (nameXL) return titleLg ? WT_X2 : WT_X1;
+  if (nameSize === NAME_SIZE_XL) return titleLg ? WT_X2  : WT_X1;
+  if (nameSize === NAME_SIZE_LG) return titleLg ? WT_LG2 : WT_LG1;
   if (nameLg) return titleLg ? WT_22 : WT_21;
   return titleLg ? WT_12 : WT_11;
 }
 
 function layoutLabel(nameInfo, titleLines) {
   const nameLg   = nameInfo.lines.length > 1;
-  const nameXL   = nameInfo.size === NAME_SIZE_XL;
+  const nameSize = nameInfo.size;
   const hasTitle = titleLines.length > 0;
   const titleLg  = titleLines.length > 1;
 
   if (!hasTitle) {
-    if (nameXL) return 'Extra long name · no title';
-    if (nameLg) return 'Long name · no title';
+    if (nameSize === NAME_SIZE_XL) return 'Extra long name (27pt) · no title';
+    if (nameSize === NAME_SIZE_LG) return 'Long name (36pt) · no title';
+    if (nameLg) return 'Long name (48pt) · no title';
     return 'Default · no title';
   }
-  if (nameXL) return titleLg ? 'Extra long name · 2-line title' : 'Extra long name · title';
-  if (nameLg) return titleLg ? 'Long name · 2-line title' : 'Long name · title';
+  if (nameSize === NAME_SIZE_XL) return titleLg ? 'Extra long name (27pt) · 2-line title' : 'Extra long name (27pt) · title';
+  if (nameSize === NAME_SIZE_LG) return titleLg ? 'Long name (36pt) · 2-line title' : 'Long name (36pt) · title';
+  if (nameLg) return titleLg ? 'Long name (48pt) · 2-line title' : 'Long name (48pt) · title';
   return titleLg ? '2-line title' : 'Default · title';
 }
 
