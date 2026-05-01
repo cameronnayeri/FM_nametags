@@ -12,7 +12,7 @@ const FILL_TEXT = '#001952';
 const FONT_FAM  = "'FMReview-Regular', 'FM Review', sans-serif";
 
 const NAME_SIZE    = 48;
-const NAME_SIZE_XL = 27;    // drops to 27pt when name doesn't fit on one 48pt line
+const NAME_SIZE_XL = 36;    // drops to 36pt when name doesn't fit on one 48pt line
 const TITLE_SIZE    = 21.34;
 const TITLE_SIZE_XL = 19;    // reduced when paired with a 27pt name + 2-line title
 
