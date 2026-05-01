@@ -14,7 +14,7 @@ const FONT_FAM  = "'FMReview-Regular', 'FM Review', sans-serif";
 const NAME_SIZE    = 48;
 const NAME_SIZE_XL = 36;    // drops to 36pt when name doesn't fit on one 48pt line
 const TITLE_SIZE    = 21.34;
-const TITLE_SIZE_XL = 19;    // reduced when paired with a 27pt name + 2-line title
+const TITLE_SIZE_XL = 19;    // reduced when paired with a 36pt name + 2-line title
 
 const TITLE_LINE_H    = 27;
 const TITLE_LINE_H_XL = 23;
@@ -26,7 +26,7 @@ const RIGHT_MARGIN = 41.09;
 // No-title layouts — positions derived from FM template files
 const NT_S  = { nameY: 101.69, nameSize: NAME_SIZE,    nameLineH: 0  };  // 1-line 48pt
 const NT_L  = { nameY:  76.69, nameSize: NAME_SIZE,    nameLineH: 50 };  // 2-line 48pt
-const NT_XL = { nameY:  73.0,  nameSize: NAME_SIZE_XL, nameLineH: 33 };  // 2-line 27pt
+const NT_XL = { nameY:  73.0,  nameSize: NAME_SIZE_XL, nameLineH: 33 };  // 2-line 36pt
 
 // With-title layouts — nameLines × titleLines
 // WT_11 / WT_12: positions from "Default Name w Job Title" and "Long Name w Job Title" templates
@@ -35,7 +35,7 @@ const WT_12 = { nameY: 70.25, nameSize: NAME_SIZE,    nameLineH: 0,  titleY: 110
 // WT_21 / WT_22: 2-line name (48pt) + title
 const WT_21 = { nameY: 63.0,  nameSize: NAME_SIZE,    nameLineH: 47, titleY: 135.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H    };
 const WT_22 = { nameY: 53.0,  nameSize: NAME_SIZE,    nameLineH: 44, titleY: 119.0,  titleSize: TITLE_SIZE,    titleLineH: TITLE_LINE_H - 2 };
-// WT_X1 / WT_X2: 2-line name (27pt) + title — positions from "Extra Long Name w Job Title" template
+// WT_X1 / WT_X2: 2-line name (36pt) + title — positions from "Extra Long Name w Job Title" template
 const WT_X1 = { nameY: 62.0,  nameSize: NAME_SIZE_XL, nameLineH: 39, titleY: 131.81, titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
 const WT_X2 = { nameY: 52.0,  nameSize: NAME_SIZE_XL, nameLineH: 38, titleY: 118.0,  titleSize: TITLE_SIZE_XL, titleLineH: TITLE_LINE_H_XL };
 
@@ -121,9 +121,9 @@ function measureW(text, size) {
 // Character-count thresholds derived from FM template examples:
 //   "Sofia LoBiondo"          = 14 chars → Default (single line, 48pt)
 //   "Shannon Roberson"         = 16 chars → Long Name (2-line, 48pt)
-//   "Jessica McLoughlin Clayton"= 26 chars → Extra Long (2-line, 27pt)
+//   "Jessica McLoughlin Clayton"= 26 chars → Extra Long (2-line, 36pt)
 const NAME_CHAR_LONG = 15;   // > 15 chars → 2-line name
-const NAME_CHAR_XL   = 25;   // > 25 chars → 27pt name
+const NAME_CHAR_XL   = 25;   // > 25 chars → 36pt name
 
 // Returns { lines: string[], size: number }
 function getNameInfo(name) {
@@ -229,11 +229,11 @@ function layoutLabel(nameInfo, titleLines) {
   const titleLg  = titleLines.length > 1;
 
   if (!hasTitle) {
-    if (nameSize === NAME_SIZE_XL) return 'Long name (27pt) · no title';
+    if (nameSize === NAME_SIZE_XL) return 'Long name (36pt) · no title';
     if (nameLg) return 'Long name (48pt) · no title';
     return 'Default · no title';
   }
-  if (nameSize === NAME_SIZE_XL || nameLg) return titleLg ? 'Long name (27pt) · 2-line title' : 'Long name (27pt) · title';
+  if (nameSize === NAME_SIZE_XL || nameLg) return titleLg ? 'Long name (36pt) · 2-line title' : 'Long name (36pt) · title';
   return titleLg ? '2-line title' : 'Default · title';
 }
 
