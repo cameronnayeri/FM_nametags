@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FM Tag Generator</title>
+  <style>
+    @font-face {
+      font-family: 'FMReview-Regular';
+      src: url('FMReview-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: block;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+    <header>
+      <div class="header-inner">
+        <div class="header-text">
+          <h1>FM Tag Generator</h1>
+          <span class="subtitle">Name Tag Inserts</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button id="wh-toggle" class="btn btn-toggle">Woodland Hills</button>
+        <span id="font-status" class="font-status">Loading font…</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- ── Left: Input ─────────────────────────────────── -->
+      <section class="input-section">
+        <div class="section-header">
+          <h2>Name Tags</h2>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="tags-table">
+            <thead>
+              <tr>
+                <th class="col-num">#</th>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tags-body"></tbody>
+          </table>
+        </div>
+
+        <div class="add-row-wrap">
+          <button id="add-row" class="btn btn-outline">+ Add Row</button>
+        </div>
+
+        <div class="bulk-section">
+          <button id="toggle-bulk" class="btn btn-link">↓ Bulk import (CSV)</button>
+          <div id="bulk-area" hidden>
+            <p class="hint">One entry per line: <code>Full Name, Job Title</code></p>
+            <textarea id="bulk-input" rows="6"
+              placeholder="John Smith, Senior Engineer&#10;Jane Doe, Director of Operations&#10;Alex Johnson"></textarea>
+            <div class="bulk-actions">
+              <button id="import-bulk" class="btn btn-outline">Import</button>
+              <button id="cancel-bulk" class="btn btn-link">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-actions">
+          <button id="generate-pdf" class="btn btn-primary" disabled>
+            ↓ Download PDF
+          </button>
+          <span id="tag-count" class="tag-count"></span>
+        </div>
+      </section>
+
+      <!-- ── Right: Preview ──────────────────────────────── -->
+      <section class="preview-section">
+        <div class="section-header">
+          <h2>Preview</h2>
+          <span class="hint">Updates live as you type</span>
+        </div>
+        <div id="preview-container">
+          <div class="empty-state"><p>Add names to see a preview</p></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Hidden SVG used only for text measurement -->
+  <svg id="measure-svg" xmlns="http://www.w3.org/2000/svg"
+    style="position:absolute;left:-9999px;top:-9999px;visibility:hidden;pointer-events:none;width:2000px;height:200px;">
+    <text id="measure-text" font-family="'FMReview-Regular', 'FM Review', sans-serif"></text>
+  </svg>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
