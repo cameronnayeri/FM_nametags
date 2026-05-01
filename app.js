@@ -216,8 +216,7 @@ function pickLayout(nameInfo, titleLines) {
     if (nameLg) return NT_L;
     return NT_S;
   }
-  if (nameSize === NAME_SIZE_XL) return titleLg ? WT_X2 : WT_X1;
-  if (nameLg) return titleLg ? WT_22 : WT_21;
+  if (nameSize === NAME_SIZE_XL || nameLg) return titleLg ? WT_X2 : WT_X1;
   return titleLg ? WT_12 : WT_11;
 }
 
@@ -232,8 +231,7 @@ function layoutLabel(nameInfo, titleLines) {
     if (nameLg) return 'Long name (48pt) · no title';
     return 'Default · no title';
   }
-  if (nameSize === NAME_SIZE_XL) return titleLg ? 'Long name (27pt) · 2-line title' : 'Long name (27pt) · title';
-  if (nameLg) return titleLg ? 'Long name (48pt) · 2-line title' : 'Long name (48pt) · title';
+  if (nameSize === NAME_SIZE_XL || nameLg) return titleLg ? 'Long name (27pt) · 2-line title' : 'Long name (27pt) · title';
   return titleLg ? '2-line title' : 'Default · title';
 }
 
